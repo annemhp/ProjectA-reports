@@ -52,13 +52,15 @@ export class AppComponent {
             this._service.getIssuesByDepartments(department)
                 .subscribe(issues => {
                     this.issues = (issues) ? Object.keys(issues).map(key => issues[key]) : null,
-                    this.updateDepartmentCount(this.issues);
+                        this.updateDepartmentCount(this.issues, department);
                 });
         }
     }
 
 
-    updateDepartmentCount(issues) {
+    updateDepartmentCount(issues, department) {
+        console.log(issues);
+
         this.countUpdates++;
 
         var open = 0;
@@ -81,7 +83,7 @@ export class AppComponent {
                     break;
             }
         }
-        var department= issues[0]['department'];
+
         this.reports[department] = {
             open: open,
             inprogress: inprogress,
@@ -89,31 +91,31 @@ export class AppComponent {
             invalid: invalid
         }
 
-            this.open+=open;
-            this.inprogress+=inprogress;
-            this.resolved+=resolved;
-            this.invalid+=invalid;
-        
+        this.open += open;
+        this.inprogress += inprogress;
+        this.resolved += resolved;
+        this.invalid += invalid;
+
 
         if (this.numberOfDepts == this.countUpdates) {
-             this.reports['all'] = {
+            this.reports['all'] = {
                 open: this.open,
                 inprogress: this.inprogress,
                 resolved: this.resolved,
                 invalid: this.invalid
-             }
+            }
 
 
-             this._service.addReports(this.reports)
-            .subscribe(x => {
-                // Ideally, here we'd want:
-                // this.form.markAsPristine();
-                 this.inProgress = !this.inProgress;
-            });
-           
+            this._service.addReports(this.reports)
+                .subscribe(x => {
+                    // Ideally, here we'd want:
+                    // this.form.markAsPristine();
+                    this.inProgress = !this.inProgress;
+                });
 
-        
-            
+
+
+
         }
     }
 

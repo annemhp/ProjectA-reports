@@ -51,17 +51,22 @@ System.register(['@angular/core', './department-code', './issues.service', './st
                     var departObj = this.departmentCode.departmentsMap;
                     var departments = Object.keys(departObj);
                     this.numberOfDepts = departments.length;
-                    for (var _i = 0, departments_1 = departments; _i < departments_1.length; _i++) {
-                        var department = departments_1[_i];
-                        this._service.getIssuesByDepartments(department)
+                    var _loop_1 = function(department) {
+                        this_1._service.getIssuesByDepartments(department)
                             .subscribe(function (issues) {
                             _this.issues = (issues) ? Object.keys(issues).map(function (key) { return issues[key]; }) : null,
-                                _this.updateDepartmentCount(_this.issues);
+                                _this.updateDepartmentCount(_this.issues, department);
                         });
+                    };
+                    var this_1 = this;
+                    for (var _i = 0, departments_1 = departments; _i < departments_1.length; _i++) {
+                        var department = departments_1[_i];
+                        _loop_1(department);
                     }
                 };
-                AppComponent.prototype.updateDepartmentCount = function (issues) {
+                AppComponent.prototype.updateDepartmentCount = function (issues, department) {
                     var _this = this;
+                    console.log(issues);
                     this.countUpdates++;
                     var open = 0;
                     var inprogress = 0;
@@ -84,7 +89,6 @@ System.register(['@angular/core', './department-code', './issues.service', './st
                                 break;
                         }
                     }
-                    var department = issues[0]['department'];
                     this.reports[department] = {
                         open: open,
                         inprogress: inprogress,
